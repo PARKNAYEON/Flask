@@ -1,9 +1,11 @@
 from flask import jsonify
 from flask import request
+from flask_jwt import jwt_required
 from models import Fcuser, db
 from . import api
 
 @api.route('/users', methods=['GET', 'POST'])
+@jwt_required()
 def test():
     if request.method == 'POST':
         # header에 contentname이 명시되어 있는데, from을 사용하면 아래와 같이 표현이 된다
@@ -69,8 +71,10 @@ def user_detail(uid):
     # if password:
     #     updated_data['password'] = password
 
+    print(Fcuser.id)
     Fcuser.query.filter(Fcuser.id == uid).update(data) # 업데이트 정보를 가지고 와서
     user = Fcuser.query.filter(Fcuser.id == uid).first() # 넣는다
+
 
     return jsonify(user.serialize)  
 
