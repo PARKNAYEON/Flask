@@ -8,32 +8,15 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
         <script>
-        //버튼을 누를 때 ajax 호출 성공하면 메세지 띄운 다음에 홈으로 보내기
-            function regist(){
-                $.ajax({ 
-                    url: '/api/v1/users',
-                    contentType: 'application/json',
-                    method: 'POST',
-                    data: JSON.stringify({
-                      userid: $('#userid').val(),
-                      username: $('#username').val(),
-                      password: $('#password').val(),
-                      're_password':$('#re_password').val()
-
-                    })
-                }).done(function(res){//완료되었을 때 callback
-                    alert('회원가입에 성공했습니다!')
-                    document.location = '/';
-                });
+            function login(){
+                
             }
-
         </script>
     </head>
-
     <body>
         <div class="container">
             <div class="row mt-5">
-                <h1>회원 가입</h1>
+                <h1>로그인</h1>
             </div>
             <div class="row mt-5">
                 <div class="col-12">
@@ -43,18 +26,10 @@
                             <input type="text" class="form-control" id="userid" placeholder="아이디" name="userid"/>
                         </div>
                         <div class="form-group">
-                            <label for="username">사용자 이름</label>
-                            <input type="text" class="form-control" id="username" placeholder="사용자 이름" name="username"/>
-                        </div>
-                        <div class="form-group">
                             <label for="password">비밀번호</label>
                             <input type="password" class="form-control" id="password" placeholder="비밀번호" name="password"/>
                         </div>
-                        <div class="form-group">
-                            <label for="re_password">비밀번호 확인</label>
-                            <input type="password" class="form-control" id="re_password" placeholder="비밀번호 확인" name="re_password"/>
-                        </div>
-                        <button type="button" class="btn btn-primary" onclick="regist();">등록</button>
+                        <button type="button" class="btn btn-primary" onclick="login();">로그인</button>
                         </div>
                     </form>
                 </div>
