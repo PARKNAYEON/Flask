@@ -8,6 +8,8 @@ class Todo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     fcuser_id = db.Column(db.Integer, db.ForeignKey('fcuser.id'), nullable=False)
     title = db.Column(db.String(256))
+    status = db.Column(db.Integer)
+    due = db.Column(db.String(64))
     tstamp = db.Column(db.DateTime, server_default=db.func.now())
 
     @property
@@ -15,6 +17,7 @@ class Todo(db.Model):
         return{
             'id': self.id,
             'title': self.title,
+            'fcuser':self.fcuser.userid, # todos backref를 만들어놨기 때문에 가능하다
             'tstamp': self.tstamp
         }
 
@@ -23,7 +26,7 @@ class Todo(db.Model):
 class Fcuser(db.Model):
     __tablename__ = 'fcuser'
     id = db.Column(db.Integer, primary_key=True)
-    password = db.Column(db.String(32))
+    userid = db.Column(db.String(32))
     password = db.Column(db.String(128))
     todos = db.relationship('Todo', backref='fcuser', lazy=True)
     
