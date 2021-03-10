@@ -30,7 +30,7 @@ def todos_done():
     todo.status = 1
 
     db.session.commit()
-    send_slack('TODO가 완료되었습니다\n사용자: %s\n할일 제목:%s\n기한:%s'%(fcuser.userid, todo.title))
+    send_slack('TODO가 완료되었습니다\n사용자: %s\n할일 제목:%s'%(fcuser.userid, todo.title))
 
     return jsonify()
 
