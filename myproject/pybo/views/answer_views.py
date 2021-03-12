@@ -20,7 +20,7 @@ def create(question_id):
         answer = Answer(content=content, create_date=datetime.now(), user=g.user) # g.user -> auth_views.py 파일의 @bp.before_app_request 애너테이션으로 만든 로그인한 사용자 정보
         question.answer_set.append(answer) # 질문에 대한 답변들
         db.session.commit()
-        return redirect(url_for('question.detail', question_id = question_id))
+        return redirect('{}#answer_{}'.format(url_for('question.detail', question_id = question_id), answer.id)) # 스크롤 저절로 이동
     
     return render_template('question/question_detail.html', question=question, form=form)
 
@@ -38,7 +38,7 @@ def modify(answer_id):
             form.populate_obj(answer)
             answer.modify_date = datetime.now()
             db.session.commit()
-            return redirect(url_for('question.detail', question_id=answer.question.id))
+            return redirect('{}#answer_{}'.format(url_for('question.detail', question_id = answer.question.id), answer.id))
     else:
         form = AnswerForm(obj=answer)
     return render_template('answer/answer_form.html', answer=answer, form=form)

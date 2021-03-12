@@ -2,7 +2,8 @@ from datetime import datetime
 from flask import Blueprint, render_template, request, url_for, g, flash
 from werkzeug.utils import redirect
 from .. import db
-from pybo.models import Question
+from sqlalchemy import func
+from pybo.models import Question, Answer, User, question_voter
 from ..forms import QuestionForm, AnswerForm
 from pybo.views.auth_views import login_required
 
@@ -11,10 +12,42 @@ bp = Blueprint('question', __name__, url_prefix='/question')
 
 @bp.route('/list/')
 def _list():
-    page = request.args.get('page', type=int, default=1) # get 방식으로 요청한 URL에서 page값 5를 가져올 때 사용
-    question_list = Question.query.order_by(Question.create_date.desc())
+    #입력 파라미터
+    page = request.args.get('page', type=int, default=1)
+    kw = request.args.get('kw', type=str, default='')
+    so = request.args.get('so', type=str, default='recent')
+
+    if so == 'recommend':
+        sub_query = db.session.query( # 질문별 추천 수를 알기 위해서
+            question_voter.c.question_id, func.count('*').label('num_voter'))\
+            .group_by(question_voter.c.question_id).subquery()  # 모델과 조인하고 /질문별 추천 수를/ 얻기
+        question_list = Question.query\
+            .outerjoin(sub_query, Question.id == sub_query.c.question_id)\
+                .order_by(sub_query.c.num_voter.desc(), Question.create_date.desc())# 아우터조인, 추천수를 의미하는 것을 역순으로 정렬 -> 추천 수가 많은 질문으로 정렬되고, 추천 수가 같은 경우 작성일시 역순으로 정렬
+    elif so == 'popular':
+        sub_query = db.session.query(Answer.question_id, func.count('*').label('num_answer'))\
+            .group_by(Answer.question_id).subquery()
+        question_list = Question.query\
+            .outerjoin(sub_query, Question.id == sub_query.c.question_id)\
+                .order_by(sub_query.c.num_answer.desc(), Question.create_date.desc())
+    else:
+        question_list = Question.query.order_by(Question.create_date.desc())
+        
+    #조회
+    
+    if kw:
+        search = '%%{}%%'.format(kw)
+        sub_query = db.session.query(Answer.question_id, Answer.content, User.username).join(User, Answer.user_id == User.id).subquery()
+        question_list = question_list.join(User).outerjoin(sub_query, sub_query.c.question_id == Question.id).filter(Question.subject.ilike(search)|
+            Question.content.ilike(search)|
+            User.username.ilike(search)|
+            sub_query.c.content.ilike(search)|
+            sub_query.c.username.ilike(search)).distinct()
+
+    #paging
     question_list = question_list.paginate(page, per_page=10)
-    return render_template('question/question_list.html', question_list=question_list)
+    return render_template('question/question_list.html', question_list=question_list, page=page, kw=kw)
+
 
 
 @bp.route('/detail/<int:question_id>/')
@@ -63,3 +96,7 @@ def delete(question_id):
     db.session.delete(question)
     db.session.commit()
     return redirect(url_for('question._list'))
+
+
+
+        
