@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import MetaData
@@ -17,9 +17,13 @@ naming_convention = {
 db = SQLAlchemy(metadata=MetaData(naming_convention=naming_convention))
 migrate = Migrate()
 
+def page_not_found(e):
+    return render_template('404.html'), 404
+
 def create_app():
     app = Flask(__name__)
     app.config.from_object(config) # 환경변수로 부르기 위해
+    app.register_error_handler(404, page_not_found)
 
     #ORM db와 migrate를 객체로 만든 다음 함수 안에서 메서드를 이용해서 초기화 -> 이렇게 하지 않으면 다른 모듈에서 불러오지 못하기 때문이다
     db.init_app(app)
