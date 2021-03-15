@@ -24,7 +24,7 @@ def create_question(question_id):
     return render_template('comment/comment_form.html', form=form)
 
 
-@bp.route('/modify/question/<int:comment_id>', methods=('GET', 'POST'))
+@bp.route('/modify/question/<int:comment_id>', methods=('GET', 'POST')) # 변수를 바꾸기 위해서 <>를 사용함 defaults={:}-> 사용자 URL 변수에 기본값을 지정하는 옵션이며 사전 타입으로 전달
 @login_required
 def modify_question(comment_id):
     comment = Comment.query.get_or_404(comment_id)
