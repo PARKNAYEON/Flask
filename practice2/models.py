@@ -7,7 +7,7 @@ class Fcuser(db.Model):
     __tablename__ = 'fcuser'
     id = db.Column(db.Integer, primary_key=True)
     password = db.Column(db.String(64))
-    userId = db.Column(db.String(32))
+    userid = db.Column(db.String(32))
     username = db.Column(db.String(8))
 
     @property #변수처럼 사용할 수 있게 됨
@@ -15,6 +15,6 @@ class Fcuser(db.Model):
         return {
             'id' : self.id,
             'password' : self.password,
-            'userid' : self.userId,
+            'userid' : self.userid,
             'username' : self.username
         }
