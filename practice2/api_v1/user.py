@@ -4,9 +4,11 @@ from flask_jwt import jwt_required
 from models import Fcuser, db
 from . import api
 
+# 제이쿼리, AJAX 데이터만 주고 받는 걸로, 비동기로 데이터를 요청하고 데이터 반영하고 
+
 @api.route('/users', methods=['GET', 'POST'])
 @jwt_required()
-def test():
+def users():
     if request.method == 'POST':
         # header에 contentname이 명시되어 있는데, from을 사용하면 아래와 같이 표현이 된다
         # userid = request.form.get('userid')
@@ -39,7 +41,7 @@ def test():
         
         return jsonify(), 201
 
-    users = Fcuser.query.all()
+    users = Fcuser.query.all() # 모든 사용자 가져와짐
     
     #1. 직접 리스트는 반복문을 돌면서 추가하면 됨
     #2. 모델안에다가 직렬화 함수를 만들어두고 리스트를 만들어냄
@@ -49,7 +51,7 @@ def test():
 def user_detail(uid):
     # header에 contentname이 명시되어 있는데, api를 사용하면 
     if request.method == 'GET':
-        user = Fcuser.query.filter(Fcuser.id == uid).first()
+        user = Fcuser.query.filter(Fcuser.id == uid).first() # first 하나만 뽑아내기
         return jsonify(user.serialize)
 
     elif request.method == 'DELETE':

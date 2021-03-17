@@ -10,7 +10,7 @@ class Fcuser(db.Model):
     userid = db.Column(db.String(32))
     username = db.Column(db.String(8))
 
-    @property #변수처럼 사용할 수 있게 됨
+    @property #변수처럼 사용할 수 있게 됨, 속성값
     def serialize(self): 
         return {
             'id' : self.id,
