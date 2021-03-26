@@ -32,9 +32,6 @@ students_list.append(student3)
 
 print(students_list)
 
-print()
-print()
-
 # 반복(__str__)
 for x in students_list:
     # print(repr(x))
@@ -43,32 +40,3 @@ for x in students_list:
     # str : Kim
     # str : Lee
     # str : Kim
-
-
-class Student():
-    '''
-    Student Class
-    Author : NY
-    Date : 2021.03.25
-    '''
-
-    # 클래스 변수
-    student_count = 0
-    
-    def __init__(self, name, number, grade, details, email=None):
-        self._name = name
-        self._number = number
-        self._grade = grade
-        self._details = details
-        self._email = email
-
-        Student.student_count += 1
-
-    def __str__(self):
-        return 'str {}'.format(self._name)
-
-    def __repr__(self):
-        return 'repr {}'.format(self._name)
-    
-    def detail_info(self):
-        print('Current Id : {}')
